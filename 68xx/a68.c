@@ -68,6 +68,8 @@ parse the source line and convert it into the object bytes that it represents.
 /*  Get global goodies:  */
 
 #include "a68.h"
+#include "string.h"
+#include <stdlib.h>
 
 /*  Define global mailboxes for all modules:				*/
 
@@ -209,12 +211,12 @@ void asm_line()
     return;
 }
 
-static void flush()
+void flush()
 {
     while (popc() != '\n');
 }
 
-static void do_label()
+void do_label()
 {
     SCRATCH SYMBOL *l;
     SYMBOL *find_symbol(), *new_symbol();
@@ -242,7 +244,7 @@ static void do_label()
 #define	NEEDBYTE	1
 #define	HAVENUM		2
 
-static void normal_op()
+void normal_op()
 {
     SCRATCH int numctl;
     SCRATCH unsigned attrib, opcode, operand;
@@ -353,7 +355,7 @@ static void normal_op()
     }
 }
 
-static void pseudo_op()
+void pseudo_op()
 {
     SCRATCH char *s;
     SCRATCH unsigned *o, u;

@@ -82,7 +82,7 @@ extern TOKEN token;
 /*  global flag	forwd is set to indicate to the line assembler that it	*/
 /*  should not base certain decisions on the result of the evaluation.	*/
 
-static int bad;
+int bad;
 
 unsigned expr()
 {
@@ -94,7 +94,7 @@ unsigned expr()
     return bad ? 0 : u;
 }
 
-static unsigned eval(pre)
+unsigned eval(pre)
 unsigned pre;
 {
     register unsigned op, u, v;
@@ -199,7 +199,7 @@ unsigned pre;
     }
 }
 
-static void exp_error(c)
+void exp_error(c)
 char c;
 {
     forwd = bad = TRUE;  error(c);
@@ -211,8 +211,8 @@ char c;
 /*  to an attribute word, a numeric value, and (possibly) a string	*/
 /*  value.								*/
 
-static int oldt = FALSE;
-static int quote = FALSE;
+int oldt = FALSE;
+int quote = FALSE;
 
 TOKEN *lex()
 {
@@ -326,7 +326,7 @@ opr2:		    token.attr = BINARY + RELAT + OPR;
     return &token;
 }
 
-static void make_number(base)
+void make_number(base)
 unsigned base;
 {
     SCRATCH char *p;
@@ -351,19 +351,19 @@ char c;
 	c == '&' || c == '.' || c == ':' || c == '?';
 }
 
-static int isnum(c)
+int isnum(c)
 char c;
 {
     return c >= '0' && c <= '9';
 }
 
-static int ishex(c)
+int ishex(c)
 char c;
 {
     return isnum(c) || ((c = toupper(c)) >= 'A' && c <= 'F');
 }
 
-static int isalnum(c)
+int isalnum(c)
 char c;
 {
     return isalph(c) || isnum(c);
@@ -410,8 +410,8 @@ void trash()
 /*  Semicolon is mapped to \n.  In addition, a copy of all input is set	*/
 /*  up in a line buffer for the benefit of the listing.			*/
 
-static int oldc, eol;
-static char *lptr;
+int oldc, eol;
+char *lptr;
 
 int popc()
 {

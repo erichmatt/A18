@@ -73,6 +73,8 @@ This module contains the following utility packages:
 /*  Get global goodies:  */
 
 #include "a68.h"
+#include "string.h"
+#include <stdlib.h>
 
 /*  Make sure that MSDOS compilers using the large memory model know	*/
 /*  that calloc() returns pointer to char as an MSDOS far pointer is	*/
@@ -90,7 +92,7 @@ extern unsigned address, bytes, errors, listleft, obj[], pagelen;
 /*  from the heap with the calloc() function.  The root pointer lives	*/
 /*  here:								*/
 
-static SYMBOL *sroot = NULL;
+SYMBOL *sroot = NULL;
 
 /*  Add new symbol to symbol table.  Returns pointer to symbol even if	*/
 /*  the symbol already exists.  If there's not enough memory to store	*/
@@ -136,7 +138,7 @@ char *nam;
 {
     OPCODE *bsearch();
 
-    static OPCODE opctbl[] = {
+    OPCODE opctbl[] = {
 	{ NULL,					0x1b,	"ABA"	},
 	{ IS6801,				0x3a,	"ABX"	},
 	{ DIROK + INDEX + IMM8 + REGREQ,	0x89,	"ADC"	},
@@ -303,7 +305,7 @@ char *nam;
 {
     OPCODE *bsearch();
 
-    static OPCODE oprtbl[] = {
+    OPCODE oprtbl[] = {
 	{ REG,				'A',		"A"	},
 	{ BINARY + LOG1  + OPR,		AND,		"AND"	},
 	{ REG,				'B',		"B"	},
@@ -327,7 +329,7 @@ char *nam;
     return bsearch(oprtbl,oprtbl + (sizeof(oprtbl) / sizeof(OPCODE)),nam);
 }
 
-static OPCODE *bsearch(lo,hi,nam)
+OPCODE *bsearch(lo,hi,nam)
 OPCODE *lo, *hi;
 char *nam;
 {
@@ -343,7 +345,7 @@ char *nam;
     }
 }
 
-static int ustrcmp(s,t)
+int ustrcmp(s,t)
 char *s, *t;
 {
     SCRATCH int i;
@@ -356,7 +358,7 @@ char *s, *t;
 /*  output routines to do all operations without the main routine	*/
 /*  having to fool with it.						*/
 
-static FILE *list = NULL;
+FILE *list = NULL;
 
 /*  Listing file open routine.  If a listing file is already open, a	*/
 /*  warning occurs.  If the listing file doesn't open correctly, a	*/
@@ -409,7 +411,7 @@ void lputs()
 /*  listing in alphabetic order by symbol name, and the listing file is	*/
 /*  closed.  If the disk fills up, a fatal error occurs.		*/
 
-static int col = 0;
+int col = 0;
 
 void lclose()
 {
@@ -426,7 +428,7 @@ void lclose()
     return;
 }
 
-static void list_sym(sp)
+void list_sym(sp)
 SYMBOL *sp;
 {
     void check_page();
@@ -444,7 +446,7 @@ SYMBOL *sp;
     return;
 }
 
-static void check_page()
+void check_page()
 {
     if (pagelen && !--listleft) eject = TRUE;
     if (eject) {
@@ -458,11 +460,11 @@ static void check_page()
 /*  output routines to do all of the required buffering and record	*/
 /*  forming without the	main routine having to fool with it.		*/
 
-static FILE *hex = NULL;
-static unsigned cnt = 0;
-static unsigned addr = 0;
-static unsigned sum = 0;
-static unsigned buf[HEXSIZE];
+FILE *hex = NULL;
+unsigned cnt = 0;
+unsigned addr = 0;
+unsigned sum = 0;
+unsigned buf[HEXSIZE];
 
 /*  Hex file open routine.  If a hex file is already open, a warning	*/
 /*  occurs.  If the hex file doesn't open correctly, a fatal error	*/
@@ -529,7 +531,7 @@ void hclose()
     return;
 }
 
-static void record(typ)
+void record(typ)
 unsigned typ;
 {
     SCRATCH unsigned i;
@@ -546,10 +548,10 @@ unsigned typ;
     return;
 }
 
-static void putb(b)
+void putb(b)
 unsigned b;
 {
-    static char digit[] = "0123456789ABCDEF";
+    char digit[] = "0123456789ABCDEF";
 
     putc(digit[b >> 4],hex);  putc(digit[b & 0x0f],hex);
     sum += b;  return;
